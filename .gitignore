@@ -1,3 +1,8 @@
 
 // Ignore build output
 build/
+
+// Ignore User preferences
+.vscode/
+.clang-format
+

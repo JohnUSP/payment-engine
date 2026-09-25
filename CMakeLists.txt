@@ -10,7 +10,7 @@ add_executable(payment_app
 )
 
 add_library(payment_core
-    src/transactions.cpp
+    src/transaction.cpp
 )
 
 

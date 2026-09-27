@@ -35,8 +35,8 @@ std::vector<const Transaction*> TransactionRepository::findAll() const {
 
   std::vector<const Transaction*> output;
   output.reserve(m_transactions.size());
-  for (const auto& [id, tx] : m_transactions) {
-    output.push_back(&tx);
+  for (const auto& [id, transaction] : m_transactions) {
+    output.push_back(&transaction);
   }
 
   return output;
@@ -46,9 +46,9 @@ std::vector<const Transaction*>
 TransactionRepository::findByStatus(TransactionStatus status) const {
 
   std::vector<const Transaction*> output;
-  for (const auto& [id, tx] : m_transactions) {
-    if (tx.getStatus() == status) {
-      output.push_back(&tx);
+  for (const auto& [id, transaction] : m_transactions) {
+    if (transaction.getStatus() == status) {
+      output.push_back(&transaction);
     }
   }
 

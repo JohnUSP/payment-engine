@@ -39,6 +39,8 @@ private:
   Amount m_amount;
   std::string m_description;
   TimeStamp m_time;
+  static Amount validateAmount(Amount amount);
+  static TransactionStatus validateStatus(TransactionStatus status);
   void checkStatusChange(TransactionStatus newStatus) const;
   void forbidStatusChange(TransactionStatus newStatus) const;
 };

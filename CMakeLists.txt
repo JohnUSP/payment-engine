@@ -15,6 +15,7 @@ add_library(payment_core
     src/pix_payment.cpp
     src/credit_payment.cpp
     src/debit_payment.cpp
+    src/payment_factory.cpp
 )
 
 

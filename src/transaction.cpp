@@ -43,6 +43,17 @@ TransactionStatus Transaction::validateStatus(TransactionStatus status) {
   throw std::logic_error("Invalid transaction status");
 }
 
+PaymentType Transaction::validatePayType(PaymentType type) {
+
+  switch (type) {
+  case PaymentType::PIX:
+  case PaymentType::CREDIT:
+  case PaymentType::DEBIT:
+    return type;
+  }
+  throw std::invalid_argument("Unsupported payment type");
+}
+
 void Transaction::forbidStatusChange(TransactionStatus newStatus) const {
 
   throw std::logic_error(

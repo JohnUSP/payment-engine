@@ -41,6 +41,7 @@ private:
   TimeStamp m_time;
   static Amount validateAmount(Amount amount);
   static TransactionStatus validateStatus(TransactionStatus status);
+  static PaymentType validatePayType(PaymentType type);
   void checkStatusChange(TransactionStatus newStatus) const;
   void forbidStatusChange(TransactionStatus newStatus) const;
 };

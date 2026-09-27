@@ -2,15 +2,23 @@
 #include <chrono>
 #include <cstdint>
 #include <string>
+#include <string_view>
 
 namespace payment {
 
-enum class TransactionStatus { PENDING, APPROVED, DECLINED, FAILED };
+enum class TransactionStatus {
+  PENDING,
+  VALIDATED,
+  APPROVED,
+  DENIED,
+  CANCELED,
+  COMPLETED
+};
 enum class PaymentType { DEBIT, CREDIT, PIX };
 using TransactionId = std::uint64_t;
 using Amount = std::int64_t;
 using TimeStamp = std::chrono::system_clock::time_point;
-
+std::string_view toString(TransactionStatus status);
 class Transaction {
 
 public:
@@ -22,9 +30,7 @@ public:
   Amount getAmount() const;
   const std::string& getDescription() const;
   TimeStamp getTime() const;
-  void approve();
-  void decline();
-  void fail();
+  void setStatus(TransactionStatus status);
 
 private:
   TransactionId m_id;
@@ -33,7 +39,8 @@ private:
   Amount m_amount;
   std::string m_description;
   TimeStamp m_time;
-  void checkStatusChange() const;
+  void checkStatusChange(TransactionStatus newStatus) const;
+  void forbidStatusChange(TransactionStatus newStatus) const;
 };
 
 } // namespace payment

@@ -26,6 +26,13 @@ const Transaction* TransactionRepository::findById(TransactionId id) const {
   return nullptr;
 }
 
+Transaction* TransactionRepository::findById(TransactionId id) {
+
+  const auto& const_this = static_cast<const TransactionRepository&>(*this);
+
+  return const_cast<Transaction*>(const_this.findById(id));
+}
+
 std::size_t TransactionRepository::size() const {
 
   return m_transactions.size();

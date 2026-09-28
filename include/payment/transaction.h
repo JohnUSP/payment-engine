@@ -1,6 +1,7 @@
 #pragma once
 #include <chrono>
 #include <cstdint>
+#include <payment/payment_data.h>
 #include <string>
 #include <string_view>
 
@@ -31,17 +32,21 @@ public:
   const std::string& getDescription() const;
   TimeStamp getTime() const;
   void setStatus(TransactionStatus status);
+  const PaymentData& getPaymentData() const;
+  PaymentData& getPaymentData();
 
 private:
+  Amount m_amount;
+  PaymentType m_type; // always befor paymentData;
+  PaymentData m_paymentData;
   TransactionId m_id;
   TransactionStatus m_status;
-  PaymentType m_type;
-  Amount m_amount;
   std::string m_description;
   TimeStamp m_time;
   static Amount validateAmount(Amount amount);
   static TransactionStatus validateStatus(TransactionStatus status);
   static PaymentType validatePayType(PaymentType type);
+  static PaymentData makePaymentData(PaymentType type);
   void checkStatusChange(TransactionStatus newStatus) const;
   void forbidStatusChange(TransactionStatus newStatus) const;
 };

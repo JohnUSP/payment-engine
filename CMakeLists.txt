@@ -16,6 +16,9 @@ add_library(payment_core
     src/credit_payment.cpp
     src/debit_payment.cpp
     src/payment_factory.cpp
+    src/payment_engine.cpp
+    src/payment_strategy.cpp
+    src/card_utils.cpp
 )
 
 

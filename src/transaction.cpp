@@ -1,3 +1,4 @@
+#include "payment/payment_data.h"
 #include <format>
 #include <payment/transaction.h>
 #include <stdexcept>
@@ -5,8 +6,9 @@ namespace payment {
 
 Transaction::Transaction(TransactionId id, PaymentType type, Amount amount,
                          const std::string& description)
-    : m_id(id), m_status(TransactionStatus::PENDING), m_type(type),
-      m_amount(validateAmount(amount)), m_description(description),
+    : m_amount(validateAmount(amount)), m_type(validatePayType(type)),
+      m_paymentData(makePaymentData(m_type)), m_id(id),
+      m_status(TransactionStatus::PENDING), m_description(description),
       m_time(std::chrono::system_clock::now()) {}
 
 Amount Transaction::validateAmount(Amount amount) {
@@ -21,6 +23,12 @@ PaymentType Transaction::getType() const { return m_type; }
 Amount Transaction::getAmount() const { return m_amount; }
 const std::string& Transaction::getDescription() const { return m_description; }
 TimeStamp Transaction::getTime() const { return m_time; }
+const PaymentData& Transaction::getPaymentData() const { return m_paymentData; }
+PaymentData& Transaction::getPaymentData() {
+
+  const auto& const_this = static_cast<const Transaction&>(*this);
+  return const_cast<PaymentData&>(const_this.getPaymentData());
+}
 
 void Transaction::setStatus(const TransactionStatus newStatus) {
 
@@ -51,7 +59,20 @@ PaymentType Transaction::validatePayType(PaymentType type) {
   case PaymentType::DEBIT:
     return type;
   }
-  throw std::invalid_argument("Unsupported payment type");
+  throw std::invalid_argument("Invalid payment type");
+}
+
+PaymentData Transaction::makePaymentData(PaymentType type) {
+  switch (type) {
+  case PaymentType::PIX:
+    return PixData{};
+  case PaymentType::CREDIT:
+    return CreditData{};
+  case PaymentType::DEBIT:
+    return DebitData{};
+  }
+
+  throw std::invalid_argument("Invalid payment type");
 }
 
 void Transaction::forbidStatusChange(TransactionStatus newStatus) const {
@@ -112,6 +133,6 @@ std::string_view toString(TransactionStatus status) {
     return "Canceled";
   }
 
-  throw std::logic_error("Invalid transaction status");
+  throw std::invalid_argument("Invalid transaction status");
 }
 } // namespace payment

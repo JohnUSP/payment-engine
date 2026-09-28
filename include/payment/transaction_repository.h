@@ -12,6 +12,7 @@ public:
   void save(const Transaction& transaction);
   void updateStatus(TransactionId id, TransactionStatus status);
   const Transaction* findById(TransactionId id) const;
+  Transaction* findById(TransactionId id);
   std::vector<const Transaction*> findAll() const;
   std::vector<const Transaction*> findByStatus(TransactionStatus status) const;
 

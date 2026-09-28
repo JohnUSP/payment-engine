@@ -7,7 +7,13 @@ class PaymentStrategy {
 
 public:
   virtual ~PaymentStrategy() = default;
-  virtual TransactionStatus process(const Transaction& transaction) const = 0;
+  void process(Transaction& transaction) const;
+
+protected:
+  virtual void prepare(Transaction& transaction) const = 0;
+  virtual void authorize(Transaction& transaction) const = 0;
+  virtual void complete(Transaction& transaction) const = 0;
+  virtual void cancel(Transaction& transaction) const = 0;
 };
 
 } // namespace payment

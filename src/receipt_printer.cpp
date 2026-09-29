@@ -1,5 +1,5 @@
 #include <iostream>
-#include <payment/receipt_printer.h>
+#include <payment/receipt_printer.hpp>
 #include <type_traits>
 #include <variant>
 

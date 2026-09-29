@@ -1,8 +1,8 @@
 #include <memory>
-#include <payment/credit_payment.h>
-#include <payment/debit_payment.h>
-#include <payment/payment_factory.h>
-#include <payment/pix_payment.h>
+#include <payment/credit_payment.hpp>
+#include <payment/debit_payment.hpp>
+#include <payment/payment_factory.hpp>
+#include <payment/pix_payment.hpp>
 #include <stdexcept>
 
 namespace payment {

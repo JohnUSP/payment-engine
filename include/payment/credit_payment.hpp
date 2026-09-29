@@ -3,10 +3,10 @@
 
 namespace payment {
 
-class DebitPayment : public PaymentStrategy {
+class CreditPayment : public PaymentStrategy {
 
 private:
-  static constexpr Amount DEBIT_MAX = 100'000 * 100;
+  static constexpr Amount CREDIT_MAX = 100'000 * 100;
   void prepare(Transaction& transaction,
                const PaymentEventCallback& callback) const override;
   void authorize(Transaction& transaction,
@@ -15,8 +15,6 @@ private:
                 const PaymentEventCallback& callback) const override;
   void cancel(Transaction& transaction,
               const PaymentEventCallback& callback) const override;
-  void printReceipt(const Transaction& transaction,
-                    const PaymentEventCallback& callback) const;
 };
 
 } // namespace payment

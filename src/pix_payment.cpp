@@ -1,6 +1,6 @@
 #include "payment/transaction.h"
-#include <payment/card_utils.h>
-#include <payment/pix_payment.h>
+#include <payment/card_utils.hpp>
+#include <payment/pix_payment.hpp>
 namespace payment {
 
 void PixPayment::prepare(Transaction& transaction,

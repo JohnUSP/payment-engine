@@ -1,12 +1,12 @@
 #pragma once
-#include <payment/payment_strategy.h>
+#include <payment/payment_strategy.hpp>
 
 namespace payment {
 
-class CreditPayment : public PaymentStrategy {
+class DebitPayment : public PaymentStrategy {
 
 private:
-  static constexpr Amount CREDIT_MAX = 100'000 * 100;
+  static constexpr Amount DEBIT_MAX = 100'000 * 100;
   void prepare(Transaction& transaction,
                const PaymentEventCallback& callback) const override;
   void authorize(Transaction& transaction,
@@ -15,6 +15,8 @@ private:
                 const PaymentEventCallback& callback) const override;
   void cancel(Transaction& transaction,
               const PaymentEventCallback& callback) const override;
+  void printReceipt(const Transaction& transaction,
+                    const PaymentEventCallback& callback) const;
 };
 
 } // namespace payment

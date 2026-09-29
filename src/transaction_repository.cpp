@@ -1,6 +1,6 @@
 
 #include <format>
-#include <payment/transaction_repository.h>
+#include <payment/transaction_repository.hpp>
 #include <stdexcept>
 
 namespace payment {

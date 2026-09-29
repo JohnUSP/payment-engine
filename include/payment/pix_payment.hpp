@@ -1,5 +1,5 @@
 #pragma once
-#include <payment/payment_strategy.h>
+#include <payment/payment_strategy.hpp>
 namespace payment {
 
 class PixPayment : public PaymentStrategy {

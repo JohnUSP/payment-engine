@@ -1,4 +1,4 @@
-#include <payment/payment_strategy.h>
+#include <payment/payment_strategy.hpp>
 
 namespace payment {
 

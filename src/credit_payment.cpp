@@ -1,6 +1,6 @@
-#include <payment/card_utils.h>
-#include <payment/credit_payment.h>
-#include <payment/payment_data.h>
+#include <payment/card_utils.hpp>
+#include <payment/credit_payment.hpp>
+#include <payment/payment_data.hpp>
 namespace payment {
 
 void CreditPayment::prepare(Transaction& transaction,

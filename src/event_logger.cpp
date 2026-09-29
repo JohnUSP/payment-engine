@@ -1,5 +1,5 @@
 #include <iostream>
-#include <payment/event_logger.h>
+#include <payment/event_logger.hpp>
 namespace payment {
 
 void EventLogger::onPaymentEvent(const Transaction& transaction,

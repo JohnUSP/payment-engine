@@ -23,17 +23,26 @@ std::string_view toString(TransactionStatus status);
 class Transaction {
 
 public:
+  // copy not allowed
+  Transaction(const Transaction&) = delete;
+  Transaction& operator=(const Transaction&) = delete;
+  // move allowed
+  Transaction(Transaction&&) noexcept = default;
+  Transaction& operator=(Transaction&&) noexcept = default;
+  //constructor
   Transaction(TransactionId id, PaymentType type, Amount amount,
               const std::string& description);
+  // getters
   TransactionId getId() const;
   TransactionStatus getStatus() const;
   PaymentType getType() const;
   Amount getAmount() const;
   const std::string& getDescription() const;
   TimeStamp getTime() const;
-  void setStatus(TransactionStatus status);
   const PaymentData& getPaymentData() const;
   PaymentData& getPaymentData();
+  // setters
+  void setStatus(TransactionStatus status);
 
 private:
   Amount m_amount;

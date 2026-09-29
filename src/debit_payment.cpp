@@ -1,57 +1,46 @@
-// debit_payment.cpp
-
-#include <format>
-#include <iostream>
 #include <payment/card_utils.h>
 #include <payment/debit_payment.h>
 #include <payment/payment_data.h>
 
 namespace payment {
 
-void DebitPayment::prepare(Transaction& transaction) const {
+void DebitPayment::prepare(Transaction& transaction,
+                           const PaymentEventCallback& callback) const {
+
   auto& debitData = std::get<DebitData>(transaction.getPaymentData());
 
+  debitData.transactionData.amount = transaction.getAmount();
+  debitData.transactionData.tranId = transaction.getId();
+  debitData.transactionData.time = transaction.getTime();
   debitData.card.cardNumber = generateCardNumber();
   debitData.card.issuer = selectIssuer();
 
   transaction.setStatus(TransactionStatus::VALIDATED);
+  callback(transaction, PaymentEvent::TRANSACTION_VALIDATED);
 }
 
-void DebitPayment::authorize(Transaction& transaction) const {
+void DebitPayment::authorize(Transaction& transaction,
+                             const PaymentEventCallback& callback) const {
   if (transaction.getAmount() > DEBIT_MAX) {
     transaction.setStatus(TransactionStatus::DENIED);
+    callback(transaction, PaymentEvent::TRANSACTION_DENIED);
     return;
   }
 
   transaction.setStatus(TransactionStatus::APPROVED);
+  callback(transaction, PaymentEvent::TRANSACTION_APPROVED);
 }
 
-void DebitPayment::complete(Transaction& transaction) const {
+void DebitPayment::complete(Transaction& transaction,
+                            const PaymentEventCallback& callback) const {
   transaction.setStatus(TransactionStatus::COMPLETED);
-  printReceipt(transaction);
+  callback(transaction, PaymentEvent::TRANSACTION_COMPLETED);
 }
 
-void DebitPayment::cancel(Transaction& transaction) const {
+void DebitPayment::cancel(Transaction& transaction,
+                          const PaymentEventCallback& callback) const {
   transaction.setStatus(TransactionStatus::CANCELED);
-}
-
-void DebitPayment::printReceipt(const Transaction& transaction) const {
-  const auto& debitData = std::get<DebitData>(transaction.getPaymentData());
-
-  const Amount amount = transaction.getAmount();
-
-  std::cout << "\n"
-            << "================================\n"
-            << "        DEBIT RECEIPT\n"
-            << "================================\n"
-            << std::format("Transaction ID: {}\n", transaction.getId())
-            << std::format("Issuer:         {}\n", debitData.card.issuer)
-            << std::format("Card:           {}\n", debitData.card.cardNumber)
-            << std::format("Amount:         R$ {}.{:02}\n", amount / 100,
-                           amount % 100)
-            << std::format("Status:         {}\n",
-                           toString(transaction.getStatus()))
-            << "================================\n";
+  callback(transaction, PaymentEvent::TRANSACTION_CANCELED);
 }
 
 } // namespace payment

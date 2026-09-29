@@ -1,6 +1,4 @@
 #pragma once
-#include <chrono>
-#include <cstdint>
 #include <payment/payment_data.h>
 #include <string>
 #include <string_view>
@@ -16,9 +14,6 @@ enum class TransactionStatus {
   COMPLETED
 };
 enum class PaymentType { DEBIT, CREDIT, PIX };
-using TransactionId = std::uint64_t;
-using Amount = std::int64_t;
-using TimeStamp = std::chrono::system_clock::time_point;
 std::string_view toString(TransactionStatus status);
 class Transaction {
 
@@ -29,7 +24,7 @@ public:
   // move allowed
   Transaction(Transaction&&) noexcept = default;
   Transaction& operator=(Transaction&&) noexcept = default;
-  //constructor
+  // constructor
   Transaction(TransactionId id, PaymentType type, Amount amount,
               const std::string& description);
   // getters

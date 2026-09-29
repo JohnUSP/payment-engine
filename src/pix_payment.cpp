@@ -1,56 +1,47 @@
 #include "payment/transaction.h"
-#include <iostream>
 #include <payment/card_utils.h>
 #include <payment/pix_payment.h>
 namespace payment {
 
-void PixPayment::prepare(Transaction& transaction) const {
+void PixPayment::prepare(Transaction& transaction,
+                         const PaymentEventCallback& callback) const {
 
   auto& pixData = std::get<PixData>(transaction.getPaymentData());
 
+  pixData.transactionData.amount = transaction.getAmount();
+  pixData.transactionData.tranId = transaction.getId();
+  pixData.transactionData.time = transaction.getTime();
   pixData.pixId = generatePixId();
   pixData.qrCode = generateQrCode();
   pixData.payerBank = selectIssuer();
 
   transaction.setStatus(TransactionStatus::VALIDATED);
+  callback(transaction, PaymentEvent::TRANSACTION_VALIDATED);
 }
 
-void PixPayment::authorize(Transaction& transaction) const {
+void PixPayment::authorize(Transaction& transaction,
+                           const PaymentEventCallback& callback) const {
 
   if (transaction.getAmount() > PIX_MAX) {
     transaction.setStatus(TransactionStatus::DENIED);
+    callback(transaction, PaymentEvent::TRANSACTION_DENIED);
   } else {
     transaction.setStatus(TransactionStatus::APPROVED);
+    callback(transaction, PaymentEvent::TRANSACTION_APPROVED);
   }
 }
 
-void PixPayment::complete(Transaction& transaction) const {
+void PixPayment::complete(Transaction& transaction,
+                          const PaymentEventCallback& callback) const {
 
   transaction.setStatus(TransactionStatus::COMPLETED);
-  printReceipt(transaction);
+  callback(transaction, PaymentEvent::TRANSACTION_COMPLETED);
 }
 
-void PixPayment::printReceipt(const Transaction& transaction) const {
-  const auto& pixData = std::get<PixData>(transaction.getPaymentData());
-
-  Amount amount = transaction.getAmount();
-
-  std::cout << "\n"
-            << "================================\n"
-            << "         PIX RECEIPT\n"
-            << "================================\n"
-            << std::format("Transaction ID: {}\n", transaction.getId())
-            << std::format("PIX ID:         {}\n", pixData.pixId)
-            << std::format("Payer bank:     {}\n", pixData.payerBank)
-            << std::format("Amount:         R$ {}.{:02}\n", amount / 100,
-                           amount % 100)
-            << std::format("Status:         {}\n",
-                           toString(transaction.getStatus()))
-            << "================================\n";
-}
-
-void PixPayment::cancel(Transaction& transaction) const {
+void PixPayment::cancel(Transaction& transaction,
+                        const PaymentEventCallback& callback) const {
 
   transaction.setStatus(TransactionStatus::CANCELED);
+  callback(transaction, PaymentEvent::TRANSACTION_CANCELED);
 }
 } // namespace payment

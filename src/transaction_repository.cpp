@@ -5,14 +5,14 @@
 
 namespace payment {
 
-void TransactionRepository::save(const Transaction& transaction) {
+void TransactionRepository::save(Transaction&& transaction) {
 
-  auto [it, inserted] =
-      m_transactions.insert({transaction.getId(), transaction});
+  const TransactionId id = transaction.getId();
+  auto [it, inserted] = m_transactions.emplace(id, std::move(transaction));
 
   if (!inserted) {
-    throw std::logic_error(std::format(
-        "Cannot save transaction: ID {} already exists", transaction.getId()));
+    throw std::logic_error(
+        std::format("Cannot save transaction: ID {} already exists", id));
   }
 }
 

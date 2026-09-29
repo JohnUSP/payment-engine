@@ -8,8 +8,17 @@ namespace payment {
 
 class TransactionRepository {
 public:
+  TransactionRepository() = default;
+
+  // copy not allowed
+  TransactionRepository(const TransactionRepository&) = delete;
+  TransactionRepository& operator=(const TransactionRepository&) = delete;
+  // move not allowed
+  TransactionRepository(TransactionRepository&&) = delete;
+  TransactionRepository& operator=(TransactionRepository&&) = delete;
+
   std::size_t size() const;
-  void save(const Transaction& transaction);
+  void save(Transaction&& transaction);
   void updateStatus(TransactionId id, TransactionStatus status);
   const Transaction* findById(TransactionId id) const;
   Transaction* findById(TransactionId id);

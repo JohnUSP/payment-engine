@@ -1,8 +1,11 @@
 
-// Ignore build output
+//Build output
 build/
 
-// Ignore User preferences
+//User preferences
 .vscode/
 .clang-format
+
+//Documents
+docs
 

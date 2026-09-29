@@ -19,7 +19,24 @@ void PaymentEngine::process(TransactionId id) {
 
   auto payment = PaymentFactory::create(transaction->getType());
 
-  payment->process(*transaction);
+  PaymentEventCallback callback = [this](const Transaction& transaction,
+                                         PaymentEvent event) {
+    notifyObservers(transaction, event);
+  };
+  payment->process(*transaction, callback);
+}
+
+void PaymentEngine::addObserver(const PaymentObserver& observer) {
+
+  m_observers.push_back(&observer);
+}
+
+void PaymentEngine::notifyObservers(const Transaction& transaction,
+                                    PaymentEvent event) const {
+
+  for (const auto* observer : m_observers) {
+    observer->onPaymentEvent(transaction, event);
+  }
 }
 
 } // namespace payment

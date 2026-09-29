@@ -10,4 +10,5 @@ std::string_view selectIssuer();
 int generateInstallments();
 std::string generatePixId();
 std::string generateQrCode();
+
 } // namespace payment

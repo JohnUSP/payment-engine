@@ -1,6 +1,6 @@
 #pragma once
+#include <payment/payment_observer.h>
 #include <payment/transaction_repository.h>
-
 namespace payment {
 
 class PaymentEngine {
@@ -15,9 +15,13 @@ public:
   PaymentEngine& operator=(PaymentEngine&&) = delete;
 
   void process(TransactionId id);
+  void addObserver(const PaymentObserver& observer);
 
 private:
   TransactionRepository& m_repository;
+  std::vector<const PaymentObserver*> m_observers;
+  void notifyObservers(const Transaction& transaction,
+                       PaymentEvent event) const;
 };
 
 } // namespace payment

@@ -1,5 +1,7 @@
 #include <iostream>
+#include <payment/event_logger.h>
 #include <payment/payment_engine.h>
+#include <payment/receipt_printer.h>
 #include <payment/transaction.h>
 #include <payment/transaction_repository.h>
 #include <vector>
@@ -25,6 +27,12 @@ int main() {
 
   payment::TransactionRepository repository;
   payment::PaymentEngine engine(repository);
+
+  payment::ReceiptPrinter receiptPrinter;
+  engine.addObserver(receiptPrinter);
+
+  payment::EventLogger eventLogger;
+  engine.addObserver(eventLogger);
 
   for (auto& entry : transactions) {
     const auto id = entry.getId();

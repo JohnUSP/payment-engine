@@ -19,6 +19,8 @@ add_library(payment_core
     src/payment_engine.cpp
     src/payment_strategy.cpp
     src/card_utils.cpp
+    src/receipt_printer.cpp
+    src/event_logger.cpp
 )
 
 

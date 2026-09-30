@@ -10,17 +10,17 @@ add_executable(payment_app
 )
 
 add_library(payment_core
-    src/transaction.cpp
-    src/transaction_repository.cpp
-    src/pix_payment.cpp
-    src/credit_payment.cpp
-    src/debit_payment.cpp
-    src/payment_factory.cpp
-    src/payment_engine.cpp
-    src/payment_strategy.cpp
-    src/card_utils.cpp
-    src/receipt_printer.cpp
-    src/event_logger.cpp
+    src/payment/types/transaction.cpp
+    src/payment/repositories/transaction_repository.cpp
+    src/payment/strategies/pix_payment.cpp
+    src/payment/strategies/credit_payment.cpp
+    src/payment/strategies/debit_payment.cpp
+    src/payment/factories/payment_factory.cpp
+    src/payment/engine/payment_engine.cpp
+    src/payment/interfaces/payment_strategy.cpp
+    src/payment/utils/card_utils.cpp
+    src/payment/observers/receipt_printer.cpp
+    src/payment/observers/event_logger.cpp
 )
 
 

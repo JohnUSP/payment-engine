@@ -1,9 +1,9 @@
 #include <iostream>
-#include <payment/event_logger.hpp>
-#include <payment/payment_engine.hpp>
-#include <payment/receipt_printer.hpp>
-#include <payment/transaction.hpp>
-#include <payment/transaction_repository.hpp>
+#include <payment/engine/payment_engine.hpp>
+#include <payment/observers/event_logger.hpp>
+#include <payment/observers/receipt_printer.hpp>
+#include <payment/repositories/transaction_repository.hpp>
+#include <payment/types/transaction.hpp>
 #include <vector>
 
 int main() {

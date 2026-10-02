@@ -1,14 +1,9 @@
 #include <format>
 #include <payment/engine/payment_engine.hpp>
+#include <payment/exceptions/payment_exceptions.hpp>
 #include <payment/factories/payment_factory.hpp>
-#include <payment/gateways/payment_gateway.hpp>
 #include <payment/observers/payment_observer.hpp>
-#include <payment/repositories/transaction_repository.hpp>
-#include <payment/types/payment_event.hpp>
-#include <payment/types/transaction.hpp>
-#include <payment/types/transaction_id.hpp>
-#include <stdexcept>
-
+#include <payment/persistence/transaction_repository.hpp>
 namespace payment {
 
 PaymentEngine::PaymentEngine(TransactionRepository& repository,
@@ -17,9 +12,9 @@ PaymentEngine::PaymentEngine(TransactionRepository& repository,
 
 void PaymentEngine::process(TransactionId id) {
 
-  auto* transaction = m_repository.findById(id);
+  auto transaction = m_repository.findById(id);
   if (!transaction) {
-    throw std::out_of_range(
+    throw TransactionNotFound(
         std::format("Transaction with ID {} not found", id));
   }
 
@@ -30,6 +25,7 @@ void PaymentEngine::process(TransactionId id) {
     notifyObservers(transaction, event);
   };
   payment->process(*transaction, m_gateway, callback);
+  m_repository.update(*transaction);
 }
 
 void PaymentEngine::addObserver(const PaymentObserver& observer) {

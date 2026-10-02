@@ -1,4 +1,5 @@
 #pragma once
+
 #include <payment/types/amount.hpp>
 #include <payment/types/time_stamp.hpp>
 #include <payment/types/transaction_id.hpp>

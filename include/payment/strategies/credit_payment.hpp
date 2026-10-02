@@ -1,6 +1,6 @@
 #pragma once
+
 #include <payment/strategies/payment_strategy.hpp>
-#include <payment/types/amount.hpp>
 #include <payment/types/payment_event_callback.hpp>
 
 namespace payment {
@@ -10,7 +10,6 @@ class PaymentGateway;
 class CreditPayment : public PaymentStrategy {
 
 private:
-  static constexpr Amount CREDIT_MAX = 100'000 * 100;
   bool preAuthorize(Transaction& transaction) const;
   bool confirm(Transaction& transaction) const;
 

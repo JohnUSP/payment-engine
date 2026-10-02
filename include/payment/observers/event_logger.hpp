@@ -1,8 +1,9 @@
 #pragma once
+
 #include <payment/observers/payment_observer.hpp>
-#include <payment/types/payment_event.hpp>
 #include <payment/types/transaction_id.hpp>
 #include <string_view>
+
 namespace payment {
 
 class Transaction;

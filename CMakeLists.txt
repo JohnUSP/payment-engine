@@ -13,7 +13,7 @@ add_executable(payment_app
 
 add_library(payment_core
     src/payment/types/transaction.cpp
-    src/payment/repositories/transaction_repository.cpp
+    src/payment/repositories/in_memory_transaction_repository.cpp
     src/payment/strategies/credit_payment.cpp
     src/payment/strategies/debit_payment.cpp
     src/payment/factories/payment_factory.cpp

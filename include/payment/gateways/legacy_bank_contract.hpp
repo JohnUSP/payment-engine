@@ -1,4 +1,5 @@
 #pragma once
+
 #include <optional>
 #include <payment/types/amount.hpp>
 #include <payment/types/payment_type.hpp>
@@ -30,7 +31,5 @@ struct LegacyBankResponse {
 
   static LegacyBankResponse fromJson(const std::string& json);
 };
-
-
 
 } // namespace payment

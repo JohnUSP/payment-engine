@@ -4,7 +4,7 @@
 #include <payment/network/http_client.hpp>
 #include <payment/observers/event_logger.hpp>
 #include <payment/observers/receipt_printer.hpp>
-#include <payment/repositories/transaction_repository.hpp>
+#include <payment/repositories/in_memory_transaction_repository.hpp>
 #include <payment/types/transaction.hpp>
 #include <vector>
 
@@ -21,7 +21,7 @@ int main() {
   transactions.emplace_back(1002, payment::PaymentType::DEBIT, 5000,
                             "Debit payment transaction");
 
-  payment::TransactionRepository repository;
+  payment::InMemoryTransactionRepository repository;
   payment::HttpClient httpClient;
   payment::LegacyBank gateway{httpClient};
 
@@ -34,7 +34,7 @@ int main() {
 
   for (auto& entry : transactions) {
     const auto id = entry.getId();
-    repository.save(std::move(entry));
+    repository.add(entry);
     engine.process(id);
   }
 

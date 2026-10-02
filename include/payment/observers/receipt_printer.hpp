@@ -7,7 +7,9 @@
 namespace payment {
 
 class Transaction;
+
 class ReceiptPrinter : public PaymentObserver {
+
 public:
   void onPaymentEvent(const Transaction& transaction,
                       PaymentEvent event) const override;

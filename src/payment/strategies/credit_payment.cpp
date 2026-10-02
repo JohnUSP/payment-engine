@@ -4,11 +4,13 @@
 #include <payment/types/payment_event.hpp>
 #include <payment/types/payment_event_callback.hpp>
 #include <payment/types/transaction.hpp>
-#include <payment/types/transaction_status.hpp>
 #include <payment/utils/card_utils.hpp>
 
 namespace payment {
 
+namespace {
+constexpr Amount CREDIT_MAX = 100'000 * 100;
+}
 bool CreditPayment::preAuthorize(Transaction& transaction) const {
 
   auto& creditData = transaction.getCreditData();

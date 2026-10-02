@@ -2,7 +2,6 @@
 #include <nlohmann/json.hpp>
 #include <payment/exceptions/payment_exceptions.hpp>
 #include <payment/gateways/legacy_bank_contract.hpp>
-#include <stdexcept>
 
 namespace payment {
 
@@ -50,7 +49,7 @@ LegacyBankResponse LegacyBankResponse::fromJson(const std::string& json) {
     throw ExternalResponseError(
         std::format("Invalid field type in LegacyBank response: {}", e.what()));
   }
-  
+
 }
 
 } // namespace payment

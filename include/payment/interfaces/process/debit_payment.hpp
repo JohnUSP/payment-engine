@@ -1,11 +1,11 @@
 #pragma once
 
-#include <payment/strategies/payment_strategy.hpp>
+#include <payment/interfaces/process/base/payment_process.hpp>
 #include <payment/types/payment_event_callback.hpp>
 namespace payment {
 
 class PaymentGateway;
-class DebitPayment : public PaymentStrategy {
+class DebitPayment : public PaymentProcess {
 
 private:
   bool preAuthorize(Transaction& transaction) const;

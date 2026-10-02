@@ -1,10 +1,10 @@
 #include <iostream>
 #include <payment/engine/payment_engine.hpp>
-#include <payment/gateways/legacy_bank.hpp>
+#include <payment/interfaces/gateway/legacy_bank.hpp>
+#include <payment/interfaces/observer/event_logger.hpp>
+#include <payment/interfaces/observer/receipt_printer.hpp>
+#include <payment/interfaces/persistence/in_memory_transaction_repository.hpp>
 #include <payment/network/http_client.hpp>
-#include <payment/observers/event_logger.hpp>
-#include <payment/observers/receipt_printer.hpp>
-#include <payment/repositories/in_memory_transaction_repository.hpp>
 #include <payment/types/transaction.hpp>
 #include <vector>
 

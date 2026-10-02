@@ -1,6 +1,6 @@
 #include <payment/exceptions/payment_exceptions.hpp>
-#include <payment/gateways/legacy_bank.hpp>
-#include <payment/gateways/legacy_bank_contract.hpp>
+#include <payment/interfaces/gateway/legacy_bank.hpp>
+#include <payment/interfaces/gateway/legacy_bank_contract.hpp>
 #include <payment/network/http_client.hpp>
 #include <payment/types/transaction.hpp>
 #include <string>

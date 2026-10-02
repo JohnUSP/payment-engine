@@ -1,13 +1,14 @@
 #include <memory>
-#include <payment/factories/payment_factory.hpp>
-#include <payment/strategies/credit_payment.hpp>
-#include <payment/strategies/debit_payment.hpp>
+#include <payment/factory/payment_factory.hpp>
+#include <payment/interfaces/process/credit_payment.hpp>
+#include <payment/interfaces/process/debit_payment.hpp>
 #include <payment/types/payment_type.hpp>
 #include <stdexcept>
 
 namespace payment {
 
-std::unique_ptr<PaymentStrategy> PaymentFactory::create(PaymentType type) {
+std::unique_ptr<PaymentProcess>
+PaymentProcessFactory::create(PaymentType type) {
 
   switch (type) {
   case PaymentType::CREDIT:

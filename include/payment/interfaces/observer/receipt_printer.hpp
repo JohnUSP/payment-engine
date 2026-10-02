@@ -1,6 +1,6 @@
 #pragma once
 
-#include <payment/observers/payment_observer.hpp>
+#include <payment/interfaces/observer/base/payment_observer.hpp>
 #include <payment/types/payment_data.hpp>
 #include <payment/types/payment_event.hpp>
 

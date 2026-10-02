@@ -1,5 +1,5 @@
-#include <payment/gateways/payment_gateway.hpp>
-#include <payment/strategies/debit_payment.hpp>
+#include <payment/interfaces/gateway/base/payment_gateway.hpp>
+#include <payment/interfaces/process/credit_payment.hpp>
 #include <payment/types/payment_data.hpp>
 #include <payment/types/payment_event.hpp>
 #include <payment/types/payment_event_callback.hpp>
@@ -9,30 +9,29 @@
 namespace payment {
 
 namespace {
-constexpr Amount DEBIT_MAX = 100'000 * 100;
+constexpr Amount CREDIT_MAX = 100'000 * 100;
+}
+bool CreditPayment::preAuthorize(Transaction& transaction) const {
+
+  auto& creditData = transaction.getCreditData();
+
+  creditData.transactionData.amount = transaction.getAmount();
+  creditData.transactionData.tranId = transaction.getId();
+  creditData.transactionData.time = transaction.getTime();
+  creditData.card.cardNumber = generateCardNumber();
+  creditData.card.issuer = selectIssuer();
+  creditData.installments = generateInstallments();
+  return transaction.getAmount() <= CREDIT_MAX;
 }
 
-bool DebitPayment::preAuthorize(Transaction& transaction) const {
-  auto& debitData = transaction.getDebitData();
-
-  debitData.transactionData.amount = transaction.getAmount();
-  debitData.transactionData.tranId = transaction.getId();
-  debitData.transactionData.time = transaction.getTime();
-  debitData.card.cardNumber = generateCardNumber();
-  debitData.card.issuer = selectIssuer();
-
-  return transaction.getAmount() <= DEBIT_MAX;
-}
-
-bool DebitPayment::confirm(Transaction& transaction) const {
-
-  auto& debitData = transaction.getDebitData();
+bool CreditPayment::confirm(Transaction& transaction) const {
+  auto& creditData = transaction.getCreditData();
   return true;
 }
 
 ProcessResult::PreAuthorization
-DebitPayment::prepare(Transaction& transaction,
-                      const PaymentEventCallback& callback) const {
+CreditPayment::prepare(Transaction& transaction,
+                       const PaymentEventCallback& callback) const {
 
   callback(transaction, PaymentEvent::TRANSACTION_PENDING);
 
@@ -47,8 +46,8 @@ DebitPayment::prepare(Transaction& transaction,
 }
 
 ProcessResult::Authorization
-DebitPayment::send(Transaction& transaction, PaymentGateway& gateway,
-                   const PaymentEventCallback& callback) const {
+CreditPayment::send(Transaction& transaction, PaymentGateway& gateway,
+                    const PaymentEventCallback& callback) const {
 
   const ProcessResult::Authorization authorizationResult =
       gateway.send(transaction);
@@ -70,20 +69,19 @@ DebitPayment::send(Transaction& transaction, PaymentGateway& gateway,
 }
 
 ProcessResult::Finalization
-DebitPayment::complete(Transaction& transaction,
-                       const PaymentEventCallback& callback) const {
+CreditPayment::complete(Transaction& transaction,
+                        const PaymentEventCallback& callback) const {
+  transaction.setStatus(TransactionStatus::COMPLETED);
 
   if (!confirm(transaction)) {
     return ProcessResult::Finalization::ERROR;
   }
-  transaction.setStatus(TransactionStatus::COMPLETED);
   callback(transaction, PaymentEvent::TRANSACTION_COMPLETED);
-
   return ProcessResult::Finalization::SUCCESS;
 }
 
-void DebitPayment::cancel(Transaction& transaction,
-                          const PaymentEventCallback& callback) const {
+void CreditPayment::cancel(Transaction& transaction,
+                           const PaymentEventCallback& callback) const {
   transaction.setStatus(TransactionStatus::CANCELED);
   callback(transaction, PaymentEvent::TRANSACTION_CANCELED);
 }

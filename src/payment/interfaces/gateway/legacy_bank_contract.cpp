@@ -1,7 +1,7 @@
 #include <format>
 #include <nlohmann/json.hpp>
 #include <payment/exceptions/payment_exceptions.hpp>
-#include <payment/gateways/legacy_bank_contract.hpp>
+#include <payment/interfaces/gateway/legacy_bank_contract.hpp>
 
 namespace payment {
 

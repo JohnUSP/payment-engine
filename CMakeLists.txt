@@ -12,20 +12,24 @@ add_executable(payment_app
 )
 
 add_library(payment_core
+
     src/payment/types/transaction.cpp
-    src/payment/repositories/in_memory_transaction_repository.cpp
-    src/payment/strategies/credit_payment.cpp
-    src/payment/strategies/debit_payment.cpp
-    src/payment/factories/payment_factory.cpp
     src/payment/engine/payment_engine.cpp
-    src/payment/strategies/payment_strategy.cpp
-    src/payment/utils/card_utils.cpp
-    src/payment/observers/receipt_printer.cpp
-    src/payment/observers/event_logger.cpp
+
+    src/payment/factory/payment_factory.cpp
+    src/payment/interfaces/process/payment_process.cpp
+    src/payment/interfaces/process/credit_payment.cpp
+    src/payment/interfaces/process/debit_payment.cpp
+    src/payment/interfaces/persistence/in_memory_transaction_repository.cpp
+    src/payment/interfaces/observer/event_logger.cpp
+    src/payment/interfaces/observer/receipt_printer.cpp
+    src/payment/interfaces/gateway/legacy_bank.cpp
+    src/payment/interfaces/gateway/legacy_bank_contract.cpp
+
     src/payment/external/legacy_bank_api.cpp
-    src/payment/gateways/legacy_bank.cpp
-    src/payment/gateways/legacy_bank_contract.cpp
     src/payment/network/http_client.cpp
+
+    src/payment/utils/card_utils.cpp
 )
 
 target_include_directories(payment_core PUBLIC include)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <payment/observers/payment_observer.hpp>
+#include <payment/interfaces/observer/base/payment_observer.hpp>
 #include <payment/types/transaction_id.hpp>
 #include <string_view>
 

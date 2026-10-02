@@ -1,12 +1,12 @@
 #include <payment/exceptions/payment_exceptions.hpp>
-#include <payment/gateways/payment_gateway.hpp>
-#include <payment/strategies/payment_strategy.hpp>
+#include <payment/interfaces/gateway/base/payment_gateway.hpp>
+#include <payment/interfaces/process/base/payment_process.hpp>
 #include <payment/types/process_result.hpp>
 #include <payment/types/transaction.hpp>
 
 namespace payment {
 
-void PaymentStrategy::process(Transaction& transaction, PaymentGateway& gateway,
+void PaymentProcess::process(Transaction& transaction, PaymentGateway& gateway,
                               const PaymentEventCallback& callback) const {
 
   const auto status = transaction.getStatus();

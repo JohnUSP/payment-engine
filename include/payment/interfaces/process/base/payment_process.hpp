@@ -6,10 +6,11 @@ namespace payment {
 
 class Transaction;
 class PaymentGateway;
-class PaymentStrategy {
+
+class PaymentProcess {
 
 public:
-  virtual ~PaymentStrategy() = default;
+  virtual ~PaymentProcess() = default;
   void process(Transaction& transaction, PaymentGateway& gateway,
                const PaymentEventCallback& callback) const;
 

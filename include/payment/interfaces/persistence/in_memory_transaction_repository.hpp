@@ -1,5 +1,7 @@
 #pragma once
-#include <payment/persistence/transaction_repository.hpp>
+
+#include <payment/interfaces/persistence/base/transaction_repository.hpp>
+#include <shared_mutex>
 #include <unordered_map>
 
 namespace payment {
@@ -15,6 +17,7 @@ public:
 
 private:
   std::unordered_map<TransactionId, Transaction> m_transactions;
+  mutable std::shared_mutex m_mutex;
 };
 
 } // namespace payment

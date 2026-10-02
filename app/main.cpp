@@ -1,5 +1,7 @@
 #include <iostream>
 #include <payment/engine/payment_engine.hpp>
+#include <payment/gateways/legacy_bank.hpp>
+#include <payment/network/http_client.hpp>
 #include <payment/observers/event_logger.hpp>
 #include <payment/observers/receipt_printer.hpp>
 #include <payment/repositories/transaction_repository.hpp>
@@ -19,20 +21,16 @@ int main() {
   transactions.emplace_back(1002, payment::PaymentType::DEBIT, 5000,
                             "Debit payment transaction");
 
-  transactions.emplace_back(1003, payment::PaymentType::PIX, 6000,
-                            "Pix payment transaction");
-
-  transactions.emplace_back(1004, payment::PaymentType::PIX, 2'100'000,
-                            "Pix payment transaction above limit");
-
   payment::TransactionRepository repository;
-  payment::PaymentEngine engine(repository);
+  payment::HttpClient httpClient;
+  payment::LegacyBank gateway{httpClient};
 
-  payment::ReceiptPrinter receiptPrinter;
-  engine.addObserver(receiptPrinter);
+  payment::PaymentEngine engine(repository, gateway);
 
   payment::EventLogger eventLogger;
   engine.addObserver(eventLogger);
+  payment::ReceiptPrinter receiptPrinter;
+  engine.addObserver(receiptPrinter);
 
   for (auto& entry : transactions) {
     const auto id = entry.getId();

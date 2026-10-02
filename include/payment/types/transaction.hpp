@@ -27,7 +27,10 @@ public:
   const std::string& getDescription() const;
   TimeStamp getTime() const;
   const PaymentData& getPaymentData() const;
-  PaymentData& getPaymentData();
+  DebitData& getDebitData();
+  const DebitData& getDebitData() const;
+  CreditData& getCreditData();
+  const CreditData& getCreditData() const;
   // setters
   void setStatus(TransactionStatus status);
 
@@ -44,7 +47,6 @@ private:
   static PaymentType validatePayType(PaymentType type);
   static PaymentData makePaymentData(PaymentType type);
   void checkStatusChange(TransactionStatus newStatus) const;
-  void forbidStatusChange(TransactionStatus newStatus) const;
 };
 
 } // namespace payment

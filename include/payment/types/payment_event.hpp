@@ -6,6 +6,7 @@ namespace payment {
 class Transaction;
 
 enum class PaymentEvent {
+  TRANSACTION_PENDING,
   TRANSACTION_VALIDATED,
   TRANSACTION_APPROVED,
   TRANSACTION_DENIED,
@@ -15,6 +16,9 @@ enum class PaymentEvent {
 
 inline std::string_view toString(PaymentEvent event) {
   switch (event) {
+  case PaymentEvent::TRANSACTION_PENDING:
+    return "PENDING";
+
   case PaymentEvent::TRANSACTION_VALIDATED:
     return "VALIDATED";
 

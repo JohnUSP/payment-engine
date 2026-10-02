@@ -1,4 +1,5 @@
 #pragma once
+
 #include <payment/gateways/payment_gateway.hpp>
 
 namespace payment {

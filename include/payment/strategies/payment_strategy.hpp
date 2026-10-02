@@ -1,4 +1,5 @@
 #pragma once
+
 #include <payment/types/payment_event_callback.hpp>
 #include <payment/types/process_result.hpp>
 namespace payment {

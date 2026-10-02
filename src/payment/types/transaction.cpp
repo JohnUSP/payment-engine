@@ -1,9 +1,6 @@
 #include <payment/exceptions/payment_exceptions.hpp>
-#include <payment/types/amount.hpp>
-#include <payment/types/payment_data.hpp>
-#include <payment/types/payment_type.hpp>
 #include <payment/types/transaction.hpp>
-#include <payment/types/transaction_status.hpp>
+
 namespace payment {
 
 Transaction::Transaction(TransactionId id, PaymentType type, Amount amount,
@@ -130,7 +127,7 @@ void Transaction::checkStatusChange(TransactionStatus newStatus) const {
     break;
   }
 
-  throw InvalidTransactionState(
+  throw InvalidTransactionOperation(
       std::format("Invalid transaction status transition from {} to {}",
                   toString(m_status), toString(newStatus)));
 }

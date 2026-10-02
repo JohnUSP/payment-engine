@@ -1,5 +1,3 @@
-// include/payment/exceptions/exceptions.hpp
-
 #pragma once
 
 #include <stdexcept>
@@ -21,7 +19,16 @@ public:
   using std::logic_error::logic_error;
 };
 
+class TransactionNotFound : public std::runtime_error {
+public:
+  using std::runtime_error::runtime_error;
+};
 class InvalidTransactionState : public DomainError {
+public:
+  using DomainError::DomainError;
+};
+
+class InvalidTransactionOperation : public DomainError {
 public:
   using DomainError::DomainError;
 };

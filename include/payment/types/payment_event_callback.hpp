@@ -1,4 +1,5 @@
 #pragma once
+
 #include <functional>
 #include <payment/types/payment_event.hpp>
 

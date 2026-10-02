@@ -1,7 +1,9 @@
 #pragma once
+
 #include <payment/types/payment_event.hpp>
 #include <payment/types/transaction_id.hpp>
 #include <vector>
+
 namespace payment {
 
 class Transaction;

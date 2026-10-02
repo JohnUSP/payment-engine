@@ -1,6 +1,6 @@
 #pragma once
 
-#include <payment/interfaces/payment_observer.hpp>
+#include <payment/observers/payment_observer.hpp>
 #include <payment/types/payment_data.hpp>
 #include <payment/types/payment_event.hpp>
 
@@ -14,7 +14,6 @@ public:
 
 private:
   void printReceipt(const Transaction& transaction) const;
-  void printPixReceipt(const PixData& data) const;
   void printDebitReceipt(const DebitData& data) const;
   void printCreditReceipt(const CreditData& data) const;
 };

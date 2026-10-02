@@ -1,17 +1,19 @@
 #include <format>
 #include <payment/engine/payment_engine.hpp>
 #include <payment/factories/payment_factory.hpp>
-#include <payment/interfaces/payment_observer.hpp>
+#include <payment/gateways/payment_gateway.hpp>
+#include <payment/observers/payment_observer.hpp>
 #include <payment/repositories/transaction_repository.hpp>
+#include <payment/types/payment_event.hpp>
 #include <payment/types/transaction.hpp>
 #include <payment/types/transaction_id.hpp>
-#include <payment/types/payment_event.hpp>
 #include <stdexcept>
 
 namespace payment {
 
-PaymentEngine::PaymentEngine(TransactionRepository& repository)
-    : m_repository(repository) {}
+PaymentEngine::PaymentEngine(TransactionRepository& repository,
+                             PaymentGateway& gateway)
+    : m_repository(repository), m_gateway(gateway) {}
 
 void PaymentEngine::process(TransactionId id) {
 
@@ -27,7 +29,7 @@ void PaymentEngine::process(TransactionId id) {
                                          PaymentEvent event) {
     notifyObservers(transaction, event);
   };
-  payment->process(*transaction, callback);
+  payment->process(*transaction, m_gateway, callback);
 }
 
 void PaymentEngine::addObserver(const PaymentObserver& observer) {

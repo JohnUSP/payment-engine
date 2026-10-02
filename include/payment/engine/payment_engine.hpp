@@ -7,10 +7,12 @@ namespace payment {
 class Transaction;
 class PaymentObserver;
 class TransactionRepository;
+class PaymentGateway;
 class PaymentEngine {
 
 public:
-  explicit PaymentEngine(TransactionRepository& repository);
+  explicit PaymentEngine(TransactionRepository& repository,
+                         PaymentGateway& gateway);
   // copy not allowed
   PaymentEngine(const PaymentEngine&) = delete;
   PaymentEngine& operator=(const PaymentEngine&) = delete;
@@ -23,6 +25,7 @@ public:
 
 private:
   TransactionRepository& m_repository;
+  PaymentGateway& m_gateway;
   std::vector<const PaymentObserver*> m_observers;
   void notifyObservers(const Transaction& transaction,
                        PaymentEvent event) const;

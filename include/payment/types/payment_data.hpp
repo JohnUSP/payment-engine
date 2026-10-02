@@ -17,12 +17,6 @@ struct TransactionData {
   TimeStamp time{};
 };
 
-struct PixData {
-  TransactionData transactionData{};
-  std::string pixId{};
-  std::string payerBank{};
-  std::string qrCode{};
-};
 struct DebitData {
   TransactionData transactionData{};
   CardData card{};
@@ -34,6 +28,6 @@ struct CreditData {
   int installments{1};
 };
 
-using PaymentData = std::variant<PixData, DebitData, CreditData>;
+using PaymentData = std::variant<DebitData, CreditData>;
 
 } // namespace payment

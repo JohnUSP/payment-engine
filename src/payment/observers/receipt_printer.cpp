@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <payment/observers/receipt_printer.hpp>
 #include <payment/types/transaction.hpp>
@@ -22,10 +23,7 @@ void ReceiptPrinter::printReceipt(const Transaction& transaction) const {
       [this](const auto& data) {
         using T = std::decay_t<decltype(data)>;
 
-        if constexpr (std::is_same_v<T, PixData>) {
-          printPixReceipt(data);
-
-        } else if constexpr (std::is_same_v<T, DebitData>) {
+        if constexpr (std::is_same_v<T, DebitData>) {
           printDebitReceipt(data);
 
         } else if constexpr (std::is_same_v<T, CreditData>) {
@@ -33,27 +31,6 @@ void ReceiptPrinter::printReceipt(const Transaction& transaction) const {
         }
       },
       paymentData);
-}
-
-void ReceiptPrinter::printPixReceipt(const PixData& data) const {
-
-  const auto amount = data.transactionData.amount;
-  const auto id = data.transactionData.tranId;
-  const auto time = data.transactionData.time;
-  const auto& pixId = data.pixId;
-  const auto& bank = data.payerBank;
-
-  std::cout << "\n"
-            << "================================\n"
-            << "         PIX RECEIPT\n"
-            << "================================\n"
-            << std::format("Transaction ID: {}\n", id)
-            << std::format("PIX ID:         {}\n", pixId)
-            << std::format("Payer bank:     {}\n", bank)
-            << std::format("Amount:         R$ {}.{:02}\n", amount / 100,
-                           amount % 100)
-            << std::format("Time: {:%Y-%m-%d %H:%M}\n", time)
-            << "================================\n";
 }
 
 void ReceiptPrinter::printDebitReceipt(const DebitData& data) const {
@@ -64,8 +41,7 @@ void ReceiptPrinter::printDebitReceipt(const DebitData& data) const {
   const auto& issuer = data.card.issuer;
   const auto& cardNumber = data.card.cardNumber;
 
-  std::cout << "\n"
-            << "================================\n"
+  std::cout << "================================\n"
             << "        DEBIT RECEIPT\n"
             << "================================\n"
             << std::format("Transaction ID: {}\n", id)
@@ -73,8 +49,9 @@ void ReceiptPrinter::printDebitReceipt(const DebitData& data) const {
             << std::format("Card:           {}\n", cardNumber)
             << std::format("Amount:         R$ {}.{:02}\n", amount / 100,
                            amount % 100)
-            << std::format("Time: {:%Y-%m-%d %H:%M}\n", time)
-            << "================================\n";
+            << std::format("Time: {:%Y-%m-%d %H:%M:%S}\n",
+                           std::chrono::floor<std::chrono::seconds>(time))
+            << "================================" << std::endl;
 }
 
 void ReceiptPrinter::printCreditReceipt(const CreditData& data) const {
@@ -86,8 +63,7 @@ void ReceiptPrinter::printCreditReceipt(const CreditData& data) const {
   const auto& issuer = data.card.issuer;
   const auto& cardNumber = data.card.cardNumber;
 
-  std::cout << "\n"
-            << "================================\n"
+  std::cout << "================================\n"
             << "        CREDIT RECEIPT\n"
             << "================================\n"
             << std::format("Transaction ID: {}\n", id)
@@ -96,8 +72,9 @@ void ReceiptPrinter::printCreditReceipt(const CreditData& data) const {
             << std::format("Amount:         R$ {}.{:02}\n", amount / 100,
                            amount % 100)
             << std::format("Installments:   {}\n", installments)
-            << std::format("Time: {:%Y-%m-%d %H:%M}\n", time)
-            << "================================\n";
+            << std::format("Time: {:%Y-%m-%d %H:%M:%S}\n",
+                           std::chrono::floor<std::chrono::seconds>(time))
+            << "================================" << std::endl;
 }
 
 } // namespace payment

@@ -1,9 +1,9 @@
+#include <payment/exceptions/payment_exceptions.hpp>
 #include <payment/types/amount.hpp>
 #include <payment/types/payment_data.hpp>
 #include <payment/types/payment_type.hpp>
 #include <payment/types/transaction.hpp>
 #include <payment/types/transaction_status.hpp>
-#include <stdexcept>
 namespace payment {
 
 Transaction::Transaction(TransactionId id, PaymentType type, Amount amount,
@@ -15,7 +15,8 @@ Transaction::Transaction(TransactionId id, PaymentType type, Amount amount,
 
 Amount Transaction::validateAmount(Amount amount) {
   if (amount <= 0) {
-    throw std::invalid_argument("Transaction amount must be greater than zero");
+    throw InvalidTransactionAmount(
+        "Transaction amount must be greater than zero");
   }
   return amount;
 }
@@ -26,10 +27,32 @@ Amount Transaction::getAmount() const { return m_amount; }
 const std::string& Transaction::getDescription() const { return m_description; }
 TimeStamp Transaction::getTime() const { return m_time; }
 const PaymentData& Transaction::getPaymentData() const { return m_paymentData; }
-PaymentData& Transaction::getPaymentData() {
+DebitData& Transaction::getDebitData() {
+  if (m_type != PaymentType::DEBIT) {
+    throw InvalidPaymentType("Transaction is not a debit payment");
+  }
+  return std::get<DebitData>(m_paymentData);
+}
 
-  const auto& const_this = static_cast<const Transaction&>(*this);
-  return const_cast<PaymentData&>(const_this.getPaymentData());
+const DebitData& Transaction::getDebitData() const {
+  if (m_type != PaymentType::DEBIT) {
+    throw InvalidPaymentType("Transaction is not a debit payment");
+  }
+  return std::get<DebitData>(m_paymentData);
+}
+
+CreditData& Transaction::getCreditData() {
+  if (m_type != PaymentType::CREDIT) {
+    throw InvalidPaymentType("Transaction is not a credit payment");
+  }
+  return std::get<CreditData>(m_paymentData);
+}
+
+const CreditData& Transaction::getCreditData() const {
+  if (m_type != PaymentType::CREDIT) {
+    throw InvalidPaymentType("Transaction is not a credit payment");
+  }
+  return std::get<CreditData>(m_paymentData);
 }
 
 void Transaction::setStatus(const TransactionStatus newStatus) {
@@ -50,39 +73,30 @@ TransactionStatus Transaction::validateStatus(TransactionStatus status) {
     return status;
   }
 
-  throw std::logic_error("Invalid transaction status");
+  throw InvalidTransactionState("Invalid transaction status");
 }
 
 PaymentType Transaction::validatePayType(PaymentType type) {
 
   switch (type) {
-  case PaymentType::PIX:
   case PaymentType::CREDIT:
   case PaymentType::DEBIT:
     return type;
   }
-  throw std::invalid_argument("Invalid payment type");
+  throw InvalidPaymentType("Invalid payment type");
 }
 
 PaymentData Transaction::makePaymentData(PaymentType type) {
   switch (type) {
-  case PaymentType::PIX:
-    return PixData{};
   case PaymentType::CREDIT:
     return CreditData{};
   case PaymentType::DEBIT:
     return DebitData{};
   }
 
-  throw std::invalid_argument("Invalid payment type");
+  throw InvalidPaymentType("Invalid payment type");
 }
 
-void Transaction::forbidStatusChange(TransactionStatus newStatus) const {
-
-  throw std::logic_error(
-      std::format("Transaction with status {} cannot transition to {}",
-                  toString(m_status), toString(newStatus)));
-}
 void Transaction::checkStatusChange(TransactionStatus newStatus) const {
 
   switch (m_status) {
@@ -116,7 +130,9 @@ void Transaction::checkStatusChange(TransactionStatus newStatus) const {
     break;
   }
 
-  forbidStatusChange(newStatus);
+  throw InvalidTransactionState(
+      std::format("Invalid transaction status transition from {} to {}",
+                  toString(m_status), toString(newStatus)));
 }
 
 } // namespace payment

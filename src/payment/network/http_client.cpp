@@ -37,8 +37,9 @@ struct CurlSlistDeleter {
 
 } // namespace
 
-HttpResponse HttpClient::post(const std::string& url, const std::string& body,
-                              const HttpHeaders& headers) {
+HttpResponse CurlHttpClient::post(const std::string& url,
+                                  const std::string& body,
+                                  const HttpHeaders& headers) {
   std::unique_ptr<CURL, CurlDeleter> curl{curl_easy_init()};
 
   if (!curl) {

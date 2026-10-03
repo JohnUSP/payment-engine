@@ -27,6 +27,11 @@ bool DebitPayment::preAuthorize(Transaction& transaction) const {
 bool DebitPayment::confirm(Transaction& transaction) const {
 
   auto& debitData = transaction.getDebitData();
+  debitData.transactionData.amount = transaction.getAmount();
+  debitData.transactionData.tranId = transaction.getId();
+  debitData.transactionData.time = transaction.getTime();
+  debitData.card.cardNumber = generateCardNumber();
+  debitData.card.issuer = selectIssuer();
   return true;
 }
 

@@ -22,7 +22,7 @@ int main() {
                             "Debit payment transaction");
 
   payment::InMemoryTransactionRepository repository;
-  payment::HttpClient httpClient;
+  payment::CurlHttpClient httpClient;
   payment::LegacyBank gateway{httpClient};
 
   payment::PaymentEngine engine(repository, gateway);

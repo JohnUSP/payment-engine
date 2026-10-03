@@ -1,0 +1,77 @@
+[  3%] Building CXX object CMakeFiles/payment_core.dir/src/payment/types/transaction.cpp.o
+[  6%] Building CXX object CMakeFiles/payment_core.dir/src/payment/engine/payment_engine.cpp.o
+[  9%] Building CXX object CMakeFiles/payment_core.dir/src/payment/factory/payment_factory.cpp.o
+[ 12%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/process/payment_process.cpp.o
+[ 16%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/process/credit_payment.cpp.o
+[ 19%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/process/debit_payment.cpp.o
+[ 22%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/persistence/in_memory_transaction_repository.cpp.o
+[ 25%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/observer/event_logger.cpp.o
+[ 29%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/observer/receipt_printer.cpp.o
+[ 32%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/gateway/legacy_bank.cpp.o
+In file included from /home/john/Projects/cpp/training/payment-engine/src/payment/interfaces/gateway/legacy_bank.cpp:3:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp: In constructor ‘payment::LegacyBankRequest::LegacyBankRequest(payment::TransactionId, payment::Amount, payment::PaymentType, std::string)’:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:13:33: warning: declaration of ‘description’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   13 |                     std::string description)
+      |                     ~~~~~~~~~~~~^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:20:15: note: shadowed declaration is here
+   20 |   std::string description;
+      |               ^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:12:46: warning: declaration of ‘amount’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   12 |   LegacyBankRequest(TransactionId id, Amount amount, PaymentType type,
+      |                                       ~~~~~~~^~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:18:10: note: shadowed declaration is here
+   18 |   Amount amount;
+      |          ^~~~~~
+[ 35%] Building CXX object CMakeFiles/payment_core.dir/src/payment/interfaces/gateway/legacy_bank_contract.cpp.o
+In file included from /home/john/Projects/cpp/training/payment-engine/src/payment/interfaces/gateway/legacy_bank_contract.cpp:4:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp: In constructor ‘payment::LegacyBankRequest::LegacyBankRequest(payment::TransactionId, payment::Amount, payment::PaymentType, std::string)’:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:13:33: warning: declaration of ‘description’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   13 |                     std::string description)
+      |                     ~~~~~~~~~~~~^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:20:15: note: shadowed declaration is here
+   20 |   std::string description;
+      |               ^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:12:46: warning: declaration of ‘amount’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   12 |   LegacyBankRequest(TransactionId id, Amount amount, PaymentType type,
+      |                                       ~~~~~~~^~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:18:10: note: shadowed declaration is here
+   18 |   Amount amount;
+      |          ^~~~~~
+[ 38%] Building CXX object CMakeFiles/payment_core.dir/src/payment/external/legacy_bank_api.cpp.o
+[ 41%] Building CXX object CMakeFiles/payment_core.dir/src/payment/network/http_client.cpp.o
+[ 45%] Building CXX object CMakeFiles/payment_core.dir/src/payment/utils/card_utils.cpp.o
+[ 48%] Linking CXX static library libpayment_core.a
+[ 48%] Built target payment_core
+[ 51%] Building CXX object CMakeFiles/payment_app.dir/app/main.cpp.o
+[ 54%] Linking CXX executable payment_app
+[ 54%] Built target payment_app
+[ 58%] Building CXX object CMakeFiles/payment_test_gmock.dir/usr/src/googletest/googlemock/src/gmock-all.cc.o
+[ 61%] Linking CXX static library libpayment_test_gmock.a
+[ 61%] Built target payment_test_gmock
+[ 64%] Building CXX object CMakeFiles/payment_tests.dir/tests/smoke_test.cpp.o
+[ 67%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/transaction_tests.cpp.o
+[ 70%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/payment_process_tests.cpp.o
+[ 74%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/payment_factory_tests.cpp.o
+[ 77%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/in_memory_transaction_repository_tests.cpp.o
+[ 80%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/legacy_bank_tests.cpp.o
+[ 83%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/legacy_bank_contract_tests.cpp.o
+In file included from /home/john/Projects/cpp/training/payment-engine/tests/unit/legacy_bank_contract_tests.cpp:5:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp: In constructor ‘payment::LegacyBankRequest::LegacyBankRequest(payment::TransactionId, payment::Amount, payment::PaymentType, std::string)’:
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:13:33: warning: declaration of ‘description’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   13 |                     std::string description)
+      |                     ~~~~~~~~~~~~^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:20:15: note: shadowed declaration is here
+   20 |   std::string description;
+      |               ^~~~~~~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:12:46: warning: declaration of ‘amount’ shadows a member of ‘payment::LegacyBankRequest’ [-Wshadow]
+   12 |   LegacyBankRequest(TransactionId id, Amount amount, PaymentType type,
+      |                                       ~~~~~~~^~~~~~
+/home/john/Projects/cpp/training/payment-engine/include/payment/interfaces/gateway/legacy_bank_contract.hpp:18:10: note: shadowed declaration is here
+   18 |   Amount amount;
+      |          ^~~~~~
+[ 87%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/payment_engine_tests.cpp.o
+[ 90%] Building CXX object CMakeFiles/payment_tests.dir/tests/unit/payment_observer_tests.cpp.o
+[ 93%] Building CXX object CMakeFiles/payment_tests.dir/tests/integration/in_memory_transaction_repository_concurrency_tests.cpp.o
+[ 96%] Building CXX object CMakeFiles/payment_tests.dir/tests/integration/payment_engine_concurrency_tests.cpp.o
+[100%] Linking CXX executable payment_tests
+[100%] Built target payment_tests

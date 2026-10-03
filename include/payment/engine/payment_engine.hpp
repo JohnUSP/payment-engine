@@ -16,6 +16,7 @@ class PaymentGateway;
 class PaymentEngine {
 
 public:
+  // Borrows both dependencies; they must outlive this engine.
   explicit PaymentEngine(TransactionRepository& repository,
                          PaymentGateway& gateway);
   // copy not allowed
@@ -26,11 +27,16 @@ public:
   PaymentEngine& operator=(PaymentEngine&&) = delete;
 
   void process(TransactionId id);
+  // Registers a non-owning observer; keep it alive while this engine can use
+  // it.
   void addObserver(const PaymentObserver& observer);
 
 private:
+  // Non-owning; the repository must outlive this engine.
   TransactionRepository& m_repository;
+  // Non-owning; the gateway must outlive this engine.
   PaymentGateway& m_gateway;
+  // Non-owning observers; each must outlive its registration in this engine.
   std::vector<const PaymentObserver*> m_observers;
   mutable std::mutex m_observersMutex;
   std::mutex m_transactionLocksMutex;

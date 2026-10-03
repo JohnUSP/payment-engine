@@ -21,6 +21,39 @@ option(ENABLE_COVERAGE
     OFF
 )
 
+option(ENABLE_SANITIZERS
+    "Enable AddressSanitizer and UndefinedBehaviorSanitizer"
+    OFF
+)
+
+option(ENABLE_THREAD_SANITIZER
+    "Enable ThreadSanitizer"
+    OFF
+)
+
+option(ENABLE_STRICT_WARNINGS
+    "Enable additional strict compiler warnings"
+    OFF
+)
+
+if(ENABLE_THREAD_SANITIZER AND ENABLE_SANITIZERS)
+    message(FATAL_ERROR
+        "ENABLE_THREAD_SANITIZER cannot be enabled together with ENABLE_SANITIZERS."
+    )
+endif()
+
+if(ENABLE_THREAD_SANITIZER AND ENABLE_COVERAGE)
+    message(FATAL_ERROR
+        "ENABLE_THREAD_SANITIZER cannot be enabled together with ENABLE_COVERAGE."
+    )
+endif()
+
+if(ENABLE_SANITIZERS AND ENABLE_COVERAGE)
+    message(FATAL_ERROR
+        "ENABLE_SANITIZERS and ENABLE_COVERAGE cannot be enabled at the same time."
+    )
+endif()
+
 add_executable(payment_app
     app/main.cpp
 )
@@ -29,6 +62,7 @@ add_library(payment_core
     src/payment/types/transaction.cpp
     src/payment/engine/payment_engine.cpp
     src/payment/factory/payment_factory.cpp
+    src/payment/factory/payment_gateway_factory.cpp
     src/payment/interfaces/process/payment_process.cpp
     src/payment/interfaces/process/credit_payment.cpp
     src/payment/interfaces/process/debit_payment.cpp
@@ -37,6 +71,7 @@ add_library(payment_core
     src/payment/interfaces/observer/receipt_printer.cpp
     src/payment/interfaces/gateway/legacy_bank.cpp
     src/payment/interfaces/gateway/legacy_bank_contract.cpp
+    src/payment/interfaces/gateway/secondary_bank.cpp
     src/payment/external/legacy_bank_api.cpp
     src/payment/network/http_client.cpp
     src/payment/utils/card_utils.cpp
@@ -81,6 +116,7 @@ if(BUILD_TESTING)
         tests/unit/transaction_tests.cpp
         tests/unit/payment_process_tests.cpp
         tests/unit/payment_factory_tests.cpp
+        tests/unit/payment_gateway_factory_tests.cpp
         tests/unit/in_memory_transaction_repository_tests.cpp
         tests/unit/legacy_bank_tests.cpp
         tests/unit/legacy_bank_contract_tests.cpp
@@ -121,7 +157,65 @@ if(ENABLE_HTTP_INTEGRATION_TESTS)
 
     target_compile_options(payment_http_integration_tests PRIVATE -Wall -Wextra -Wpedantic)
 
-    gtest_discover_tests(payment_http_integration_tests)
+    if(NOT ENABLE_THREAD_SANITIZER)
+        gtest_discover_tests(payment_http_integration_tests)
+    endif()
+endif()
+
+if(ENABLE_STRICT_WARNINGS AND CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
+    set(STRICT_WARNING_FLAGS
+        -Wconversion
+        -Wsign-conversion
+        -Wshadow
+        -Wnon-virtual-dtor
+        -Woverloaded-virtual
+    )
+
+    target_compile_options(payment_core PRIVATE ${STRICT_WARNING_FLAGS})
+    target_compile_options(payment_app PRIVATE ${STRICT_WARNING_FLAGS})
+
+    if(TARGET payment_tests)
+        target_compile_options(payment_tests PRIVATE ${STRICT_WARNING_FLAGS})
+    endif()
+
+    if(TARGET payment_http_integration_tests)
+        target_compile_options(payment_http_integration_tests
+            PRIVATE ${STRICT_WARNING_FLAGS}
+        )
+    endif()
+endif()
+
+if(ENABLE_SANITIZERS)
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
+        message(FATAL_ERROR
+            "ENABLE_SANITIZERS requires GCC or Clang; "
+            "found '${CMAKE_CXX_COMPILER_ID}'."
+        )
+    endif()
+
+    if(NOT BUILD_TESTING)
+        message(FATAL_ERROR "ENABLE_SANITIZERS requires BUILD_TESTING=ON")
+    endif()
+
+    set(SANITIZER_COMPILE_FLAGS
+        -fsanitize=address,undefined
+        -fno-omit-frame-pointer
+    )
+    set(SANITIZER_LINK_FLAGS -fsanitize=address,undefined)
+
+    target_compile_options(payment_core PRIVATE ${SANITIZER_COMPILE_FLAGS})
+    target_link_options(payment_core PUBLIC ${SANITIZER_LINK_FLAGS})
+    target_compile_options(payment_tests PRIVATE ${SANITIZER_COMPILE_FLAGS})
+    target_link_options(payment_tests PRIVATE ${SANITIZER_LINK_FLAGS})
+
+    if(ENABLE_HTTP_INTEGRATION_TESTS)
+        target_compile_options(payment_http_integration_tests
+            PRIVATE ${SANITIZER_COMPILE_FLAGS}
+        )
+        target_link_options(payment_http_integration_tests
+            PRIVATE ${SANITIZER_LINK_FLAGS}
+        )
+    endif()
 endif()
 
 if(ENABLE_COVERAGE)
@@ -209,4 +303,27 @@ if(ENABLE_COVERAGE)
         USES_TERMINAL
         COMMENT "Running payment_tests and generating clean HTML coverage report..."
     )
+endif()
+
+if(ENABLE_THREAD_SANITIZER)
+    if(NOT CMAKE_CXX_COMPILER_ID MATCHES "^(GNU|Clang)$")
+        message(FATAL_ERROR
+            "ENABLE_THREAD_SANITIZER requires GCC or Clang; "
+            "found '${CMAKE_CXX_COMPILER_ID}'."
+        )
+    endif()
+
+    if(NOT BUILD_TESTING)
+        message(FATAL_ERROR "ENABLE_THREAD_SANITIZER requires BUILD_TESTING=ON")
+    endif()
+
+    set(THREAD_SANITIZER_COMPILE_FLAGS
+        -fsanitize=thread
+        -fno-omit-frame-pointer
+    )
+
+    target_compile_options(payment_core PRIVATE ${THREAD_SANITIZER_COMPILE_FLAGS})
+    target_link_options(payment_core PUBLIC -fsanitize=thread)
+    target_compile_options(payment_tests PRIVATE ${THREAD_SANITIZER_COMPILE_FLAGS})
+    target_link_options(payment_tests PRIVATE -fsanitize=thread)
 endif()

@@ -151,7 +151,7 @@ TEST(PaymentEngineTest, AuthorizedFlowNotifiesObserverInOrder) {
       .WillOnce(testing::Return(ProcessResult::Authorization::AUTHORIZED));
   EXPECT_CALL(repository, update(testing::_)).Times(1);
   EXPECT_CALL(observer, onPaymentEvent(testing::_, testing::_))
-      .Times(kAuthorizedEvents.size())
+      .Times(static_cast<int>(kAuthorizedEvents.size()))
       .WillRepeatedly(
           testing::Invoke([&events](const Transaction&, PaymentEvent event) {
             events.push_back(event);
@@ -180,13 +180,13 @@ TEST(PaymentEngineTest, MultipleObserversEachReceiveAuthorizedEventsInOrder) {
       .WillOnce(testing::Return(ProcessResult::Authorization::AUTHORIZED));
   EXPECT_CALL(repository, update(testing::_)).Times(1);
   EXPECT_CALL(firstObserver, onPaymentEvent(testing::_, testing::_))
-      .Times(kAuthorizedEvents.size())
+      .Times(static_cast<int>(kAuthorizedEvents.size()))
       .WillRepeatedly(testing::Invoke(
           [&firstEvents](const Transaction&, PaymentEvent event) {
             firstEvents.push_back(event);
           }));
   EXPECT_CALL(secondObserver, onPaymentEvent(testing::_, testing::_))
-      .Times(kAuthorizedEvents.size())
+      .Times(static_cast<int>(kAuthorizedEvents.size()))
       .WillRepeatedly(testing::Invoke(
           [&secondEvents](const Transaction&, PaymentEvent event) {
             secondEvents.push_back(event);

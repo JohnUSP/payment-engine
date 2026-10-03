@@ -1,10 +1,13 @@
+#include <exception>
 #include <format>
+#include <iostream>
 #include <memory>
 #include <payment/engine/payment_engine.hpp>
 #include <payment/exceptions/payment_exceptions.hpp>
 #include <payment/factory/payment_factory.hpp>
 #include <payment/interfaces/observer/base/payment_observer.hpp>
 #include <payment/interfaces/persistence/base/transaction_repository.hpp>
+#include <syncstream>
 
 namespace payment {
 
@@ -31,10 +34,10 @@ void PaymentEngine::process(TransactionId id) {
 
   auto payment = PaymentProcessFactory::create(transaction->getType());
 
-  PaymentEventCallback callback = [this](const Transaction& transaction,
-                                         PaymentEvent event) {
-    notifyObservers(transaction, event);
-  };
+  PaymentEventCallback callback =
+      [this](const Transaction& processedTransaction, PaymentEvent event) {
+        notifyObservers(processedTransaction, event);
+      };
   payment->process(*transaction, m_gateway, callback);
   m_repository.update(*transaction);
 }
@@ -53,7 +56,15 @@ void PaymentEngine::notifyObservers(const Transaction& transaction,
   }
 
   for (const auto* observer : observers) {
-    observer->onPaymentEvent(transaction, event);
+    try {
+      observer->onPaymentEvent(transaction, event);
+    } catch (const std::exception& exception) {
+      std::osyncstream(std::cerr)
+          << "Payment observer failed: " << exception.what() << '\n';
+    } catch (...) {
+      std::osyncstream(std::cerr)
+          << "Payment observer failed: unknown exception\n";
+    }
   }
 }
 

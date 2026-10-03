@@ -25,7 +25,14 @@ bool CreditPayment::preAuthorize(Transaction& transaction) const {
 }
 
 bool CreditPayment::confirm(Transaction& transaction) const {
+
   auto& creditData = transaction.getCreditData();
+  creditData.transactionData.amount = transaction.getAmount();
+  creditData.transactionData.tranId = transaction.getId();
+  creditData.transactionData.time = transaction.getTime();
+  creditData.card.cardNumber = generateCardNumber();
+  creditData.card.issuer = selectIssuer();
+  creditData.installments = generateInstallments();
   return true;
 }
 

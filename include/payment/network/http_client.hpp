@@ -13,8 +13,16 @@ struct HttpResponse {
 
 class HttpClient {
 public:
+  virtual ~HttpClient() = default;
+
+  virtual HttpResponse post(const std::string& url, const std::string& body,
+                            const HttpHeaders& headers) = 0;
+};
+
+class CurlHttpClient : public HttpClient {
+public:
   HttpResponse post(const std::string& url, const std::string& body,
-                    const HttpHeaders& headers);
+                    const HttpHeaders& headers) override;
 };
 
 } // namespace payment

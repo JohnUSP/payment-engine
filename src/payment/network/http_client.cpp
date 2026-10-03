@@ -2,7 +2,6 @@
 #include <memory>
 #include <payment/exceptions/payment_exceptions.hpp>
 #include <payment/network/http_client.hpp>
-#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -43,7 +42,7 @@ HttpResponse CurlHttpClient::post(const std::string& url,
   std::unique_ptr<CURL, CurlDeleter> curl{curl_easy_init()};
 
   if (!curl) {
-    throw std::runtime_error("Failed to initialize CURL");
+    throw HttpClientError("Failed to initialize CURL");
   }
 
   curl_slist* rawHeaders = nullptr;
@@ -53,7 +52,7 @@ HttpResponse CurlHttpClient::post(const std::string& url,
 
     if (!updatedHeaders) {
       curl_slist_free_all(rawHeaders);
-      throw std::runtime_error("Failed to create CURL headers");
+      throw HttpClientError("Failed to create CURL headers");
     }
 
     rawHeaders = updatedHeaders;
